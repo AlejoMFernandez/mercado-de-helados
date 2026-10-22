@@ -1,0 +1,863 @@
+{
+  "$schema": "https://raw.githubusercontent.com/AlejoMFernandez/kit-demos/main/docs/cliente.schema.json",
+  "id": "mercado-de-helados",
+  "nombre": "Mercado de Helados",
+  "pais": "AR",
+  "idioma": "es",
+  "modo": "demo",
+  "whatsapp": "5491130331010",
+  "prefijoPedido": "MDH",
+  "supabase": {
+    "url": "",
+    "anonKey": ""
+  },
+  "marca": {
+    "logo": "img/logo-pote.svg",
+    "logoPanel": "img/logo-blanco.svg",
+    "favicon": "img/favicon.png",
+    "colores": {
+      "fondo": "#FCF7F1",
+      "superficie": "#FFFFFF",
+      "texto": "#46382C",
+      "primario": "#552D1D",
+      "sobrePrimario": "#FCF7F1",
+      "acento": "#5CC6D0",
+      "sobreAcento": "#20393C",
+      "borde": "#D2C5B1",
+      "suave": "#6B5444",
+      "ok": "#2F6B3A"
+    },
+    "fuentes": {
+      "titulos": "'Libre Caslon Display', Georgia, serif",
+      "texto": "'Jost', system-ui, sans-serif",
+      "googleFonts": "Libre+Caslon+Display&family=Jost:wght@400;500;600"
+    },
+    "estilo": {
+      "forma": "redondeada",
+      "sombra": "suave",
+      "borde": "1px",
+      "mayusculas": false
+    }
+  },
+  "modulos": {
+    "carta": true,
+    "carrito": true,
+    "reservas": false,
+    "admin": true
+  },
+  "horarios": {
+    "lun": [
+      [
+        "11:00",
+        "01:00"
+      ]
+    ],
+    "mar": [
+      [
+        "11:00",
+        "01:00"
+      ]
+    ],
+    "mie": [
+      [
+        "11:00",
+        "01:00"
+      ]
+    ],
+    "jue": [
+      [
+        "11:00",
+        "01:00"
+      ]
+    ],
+    "vie": [
+      [
+        "11:00",
+        "02:00"
+      ]
+    ],
+    "sab": [
+      [
+        "11:00",
+        "02:00"
+      ]
+    ],
+    "dom": [
+      [
+        "11:00",
+        "01:00"
+      ]
+    ]
+  },
+  "sucursales": [
+    {
+      "id": "olivos",
+      "nombre": "Olivos",
+      "direccion": "Sturiza 587, Olivos",
+      "whatsapp": "5491130331010",
+      "lat": -34.5096,
+      "lng": -58.4863,
+      "foto": "img/suc-olivos.webp",
+      "horario": "Todos los días de 12 a 0 h",
+      "simulado": true,
+      "horas": {
+        "dom": [
+          "12:00",
+          "00:00"
+        ],
+        "lun": [
+          "12:00",
+          "00:00"
+        ],
+        "mar": [
+          "12:00",
+          "00:00"
+        ],
+        "mie": [
+          "12:00",
+          "00:00"
+        ],
+        "jue": [
+          "12:00",
+          "00:00"
+        ],
+        "vie": [
+          "12:00",
+          "00:00"
+        ],
+        "sab": [
+          "12:00",
+          "00:00"
+        ]
+      }
+    },
+    {
+      "id": "acassuso",
+      "nombre": "Acassuso",
+      "direccion": "Av. del Libertador 14.571, Acassuso",
+      "whatsapp": "5491165617980",
+      "lat": -34.4771,
+      "lng": -58.5032,
+      "foto": "img/suc-acassuso.webp",
+      "horario": "Todos los días de 12 a 0 h",
+      "simulado": true,
+      "horas": {
+        "dom": [
+          "12:00",
+          "00:00"
+        ],
+        "lun": [
+          "12:00",
+          "00:00"
+        ],
+        "mar": [
+          "12:00",
+          "00:00"
+        ],
+        "mie": [
+          "12:00",
+          "00:00"
+        ],
+        "jue": [
+          "12:00",
+          "00:00"
+        ],
+        "vie": [
+          "12:00",
+          "00:00"
+        ],
+        "sab": [
+          "12:00",
+          "00:00"
+        ]
+      }
+    },
+    {
+      "id": "lomas",
+      "nombre": "Lomas de San Isidro",
+      "direccion": "Diego Carman 341, Carman Point",
+      "whatsapp": "5491122360405",
+      "lat": -34.4935,
+      "lng": -58.5367,
+      "foto": "img/suc-san-isidro.webp",
+      "horario": "Todos los días de 12 a 0 h",
+      "simulado": true,
+      "horas": {
+        "dom": [
+          "12:00",
+          "00:00"
+        ],
+        "lun": [
+          "12:00",
+          "00:00"
+        ],
+        "mar": [
+          "12:00",
+          "00:00"
+        ],
+        "mie": [
+          "12:00",
+          "00:00"
+        ],
+        "jue": [
+          "12:00",
+          "00:00"
+        ],
+        "vie": [
+          "12:00",
+          "00:00"
+        ],
+        "sab": [
+          "12:00",
+          "00:00"
+        ]
+      }
+    },
+    {
+      "id": "devoto",
+      "nombre": "Villa Devoto",
+      "direccion": "Fernández de Enciso 3920, frente a Plaza Arenales",
+      "whatsapp": "",
+      "lat": -34.6019,
+      "lng": -58.5127,
+      "foto": "img/fachada-devoto.webp",
+      "horario": "Dom a jue de 11 a 1 h · vie y sáb de 11 a 2 h",
+      "horas": {
+        "dom": [
+          "11:00",
+          "01:00"
+        ],
+        "lun": [
+          "11:00",
+          "01:00"
+        ],
+        "mar": [
+          "11:00",
+          "01:00"
+        ],
+        "mie": [
+          "11:00",
+          "01:00"
+        ],
+        "jue": [
+          "11:00",
+          "01:00"
+        ],
+        "vie": [
+          "11:00",
+          "02:00"
+        ],
+        "sab": [
+          "11:00",
+          "02:00"
+        ]
+      }
+    },
+    {
+      "id": "maschwitz",
+      "nombre": "Ingeniero Maschwitz",
+      "direccion": "Mendoza 1731, local 1, Mercado de Maschwitz",
+      "whatsapp": "5491141572471",
+      "lat": -34.3813,
+      "lng": -58.7427,
+      "foto": "img/suc-maschwitz.webp",
+      "horario": "Todos los días de 12 a 0 h",
+      "simulado": true,
+      "horas": {
+        "dom": [
+          "12:00",
+          "00:00"
+        ],
+        "lun": [
+          "12:00",
+          "00:00"
+        ],
+        "mar": [
+          "12:00",
+          "00:00"
+        ],
+        "mie": [
+          "12:00",
+          "00:00"
+        ],
+        "jue": [
+          "12:00",
+          "00:00"
+        ],
+        "vie": [
+          "12:00",
+          "00:00"
+        ],
+        "sab": [
+          "12:00",
+          "00:00"
+        ]
+      }
+    },
+    {
+      "id": "tortugas",
+      "nombre": "Tortugas Norte",
+      "direccion": "Golfers Golf Club 2972, local 141, Small Center Tortugas",
+      "whatsapp": "5491139477773",
+      "lat": -34.4398,
+      "lng": -58.7544,
+      "foto": "img/suc-tortugas-norte.webp",
+      "horario": "Todos los días de 12 a 0 h",
+      "simulado": true,
+      "horas": {
+        "dom": [
+          "12:00",
+          "00:00"
+        ],
+        "lun": [
+          "12:00",
+          "00:00"
+        ],
+        "mar": [
+          "12:00",
+          "00:00"
+        ],
+        "mie": [
+          "12:00",
+          "00:00"
+        ],
+        "jue": [
+          "12:00",
+          "00:00"
+        ],
+        "vie": [
+          "12:00",
+          "00:00"
+        ],
+        "sab": [
+          "12:00",
+          "00:00"
+        ]
+      }
+    },
+    {
+      "id": "caamano",
+      "nombre": "Caamaño · Pilar",
+      "direccion": "Caamaño 1060, Oficia Pilar, local 5",
+      "whatsapp": "5491159971053",
+      "lat": -34.4437,
+      "lng": -58.864,
+      "foto": "img/suc-caamano.webp",
+      "horario": "Todos los días de 12 a 0 h",
+      "simulado": true,
+      "horas": {
+        "dom": [
+          "12:00",
+          "00:00"
+        ],
+        "lun": [
+          "12:00",
+          "00:00"
+        ],
+        "mar": [
+          "12:00",
+          "00:00"
+        ],
+        "mie": [
+          "12:00",
+          "00:00"
+        ],
+        "jue": [
+          "12:00",
+          "00:00"
+        ],
+        "vie": [
+          "12:00",
+          "00:00"
+        ],
+        "sab": [
+          "12:00",
+          "00:00"
+        ]
+      }
+    }
+  ],
+  "pedidos": {
+    "salidas": [
+      "whatsapp",
+      "mercadopago"
+    ],
+    "tipos": [
+      "retiro"
+    ],
+    "envio": 0,
+    "minimo": 0
+  },
+  "pagos": {
+    "mercadopago": {
+      "endpoint": "https://kit-demos-amf.vercel.app/api/mp-preference",
+      "modo": "sandbox"
+    }
+  },
+  "carta": {
+    "categorias": [
+      {
+        "id": "potes",
+        "nombre": "Potes para llevar",
+        "orden": 1
+      },
+      {
+        "id": "al-paso",
+        "nombre": "Cucuruchos y vasitos",
+        "orden": 2
+      },
+      {
+        "id": "cafe",
+        "nombre": "Café",
+        "orden": 3
+      },
+      {
+        "id": "pasteleria",
+        "nombre": "Pastelería",
+        "orden": 4
+      },
+      {
+        "id": "sab-chocolates",
+        "nombre": "Sabores · Chocolates",
+        "orden": 10
+      },
+      {
+        "id": "sab-ddl",
+        "nombre": "Sabores · Dulce de leche",
+        "orden": 11
+      },
+      {
+        "id": "sab-cremas",
+        "nombre": "Sabores · Cremas",
+        "orden": 12
+      },
+      {
+        "id": "sab-frutas",
+        "nombre": "Sabores · Frutas al agua",
+        "orden": 13
+      },
+      {
+        "id": "sab-estacion",
+        "nombre": "Sabores · De estación",
+        "orden": 14
+      }
+    ],
+    "productos": [
+      {
+        "id": "pote-kilo",
+        "categoria": "potes",
+        "nombre": "1 kg",
+        "descripcion": "Hasta 4 sabores. Precio en efectivo.",
+        "precio": 24000,
+        "foto": "img/vasos.webp",
+        "orden": 1
+      },
+      {
+        "id": "pote-medio",
+        "categoria": "potes",
+        "nombre": "½ kg",
+        "descripcion": "Hasta 3 sabores.",
+        "precio": 14500,
+        "foto": "img/pote-mano.webp",
+        "orden": 2
+      },
+      {
+        "id": "pote-cuarto",
+        "categoria": "potes",
+        "nombre": "¼ kg",
+        "descripcion": "Hasta 2 sabores.",
+        "precio": 8900,
+        "foto": "img/cielo.webp",
+        "orden": 3
+      },
+      {
+        "id": "cucurucho",
+        "categoria": "al-paso",
+        "nombre": "Cucurucho",
+        "descripcion": "Dos sabores y el corazón de waffle de la casa.",
+        "precio": 5200,
+        "foto": "img/cucurucho.webp",
+        "etiquetas": [
+          "casa"
+        ],
+        "orden": 1
+      },
+      {
+        "id": "cucurucho-grande",
+        "categoria": "al-paso",
+        "nombre": "Cucurucho grande",
+        "descripcion": "Tres sabores, con corazón de waffle.",
+        "precio": 6900,
+        "foto": "img/hero.webp",
+        "orden": 2
+      },
+      {
+        "id": "vasito",
+        "categoria": "al-paso",
+        "nombre": "Vasito",
+        "descripcion": "Dos sabores en el vasito de la casa.",
+        "precio": 4800,
+        "foto": "img/pote-mano.webp",
+        "orden": 3
+      },
+      {
+        "id": "cafe",
+        "categoria": "cafe",
+        "nombre": "Café",
+        "descripcion": "Espresso, cortado o americano.",
+        "precio": 2900,
+        "foto": "img/cafe.webp",
+        "orden": 1
+      },
+      {
+        "id": "cafe-con-leche",
+        "categoria": "cafe",
+        "nombre": "Café con leche",
+        "descripcion": "Taza grande.",
+        "precio": 3400,
+        "orden": 2
+      },
+      {
+        "id": "cafe-bocha",
+        "categoria": "cafe",
+        "nombre": "Café + bocha",
+        "descripcion": "Tu café con una bocha del sabor que elijas.",
+        "precio": 5400,
+        "foto": "img/cafe.webp",
+        "etiquetas": [
+          "casa"
+        ],
+        "orden": 3
+      },
+      {
+        "id": "lemon-pie",
+        "categoria": "pasteleria",
+        "nombre": "Lemon pie",
+        "descripcion": "Porción, con merengue italiano.",
+        "precio": 6200,
+        "foto": "img/lemon-pie.webp",
+        "orden": 1
+      },
+      {
+        "id": "cheesecake",
+        "categoria": "pasteleria",
+        "nombre": "Cheesecake",
+        "descripcion": "Porción, con frutos rojos.",
+        "precio": 6800,
+        "orden": 2
+      },
+      {
+        "id": "macarons",
+        "categoria": "pasteleria",
+        "nombre": "Macarons × 6",
+        "descripcion": "Surtidos.",
+        "precio": 7900,
+        "orden": 3
+      },
+      {
+        "id": "s-chocolate",
+        "categoria": "sab-chocolates",
+        "nombre": "Chocolate",
+        "precio": null,
+        "orden": 1
+      },
+      {
+        "id": "s-choco-almendras",
+        "categoria": "sab-chocolates",
+        "nombre": "Chocolate con almendras",
+        "precio": null,
+        "orden": 2
+      },
+      {
+        "id": "s-choco-italiano",
+        "categoria": "sab-chocolates",
+        "nombre": "Chocolate italiano",
+        "descripcion": "Uno de los clásicos de la casa.",
+        "precio": null,
+        "orden": 3
+      },
+      {
+        "id": "s-choco-blanco",
+        "categoria": "sab-chocolates",
+        "nombre": "Chocolate blanco",
+        "precio": null,
+        "orden": 4
+      },
+      {
+        "id": "s-choco-amargo",
+        "categoria": "sab-chocolates",
+        "nombre": "Chocolate amargo",
+        "precio": null,
+        "orden": 5
+      },
+      {
+        "id": "s-mousse-choco",
+        "categoria": "sab-chocolates",
+        "nombre": "Mousse de chocolate",
+        "precio": null,
+        "orden": 6
+      },
+      {
+        "id": "s-ferrero",
+        "categoria": "sab-chocolates",
+        "nombre": "Ferrero Rocher",
+        "descripcion": "Fue estrella del mes.",
+        "precio": null,
+        "orden": 7
+      },
+      {
+        "id": "s-ddl",
+        "categoria": "sab-ddl",
+        "nombre": "Dulce de leche",
+        "precio": null,
+        "orden": 1
+      },
+      {
+        "id": "s-ddl-granizado",
+        "categoria": "sab-ddl",
+        "nombre": "Dulce de leche granizado",
+        "descripcion": "Siempre gana.",
+        "precio": null,
+        "foto": "img/chocolinas.webp",
+        "orden": 2
+      },
+      {
+        "id": "s-ddl-nuez",
+        "categoria": "sab-ddl",
+        "nombre": "Dulce de leche con nuez",
+        "precio": null,
+        "orden": 3
+      },
+      {
+        "id": "s-super-ddl",
+        "categoria": "sab-ddl",
+        "nombre": "Super dulce de leche",
+        "precio": null,
+        "orden": 4
+      },
+      {
+        "id": "s-chocotorta",
+        "categoria": "sab-ddl",
+        "nombre": "Chocotorta",
+        "descripcion": "Chocolinas y dulce de leche.",
+        "precio": null,
+        "foto": "img/chocolinas.webp",
+        "orden": 5
+      },
+      {
+        "id": "s-americana",
+        "categoria": "sab-cremas",
+        "nombre": "Crema americana",
+        "precio": null,
+        "orden": 1
+      },
+      {
+        "id": "s-almendras",
+        "categoria": "sab-cremas",
+        "nombre": "Crema de almendras",
+        "precio": null,
+        "orden": 2
+      },
+      {
+        "id": "s-vainilla",
+        "categoria": "sab-cremas",
+        "nombre": "Crema de vainilla",
+        "precio": null,
+        "orden": 3
+      },
+      {
+        "id": "s-oreo",
+        "categoria": "sab-cremas",
+        "nombre": "Crema Oreo",
+        "precio": null,
+        "foto": "img/oreo-ddl.webp",
+        "orden": 4
+      },
+      {
+        "id": "s-granizada",
+        "categoria": "sab-cremas",
+        "nombre": "Crema granizada",
+        "precio": null,
+        "foto": "img/chips.webp",
+        "orden": 5
+      },
+      {
+        "id": "s-tramontana",
+        "categoria": "sab-cremas",
+        "nombre": "Crema Tramontana",
+        "precio": null,
+        "orden": 6
+      },
+      {
+        "id": "s-cielo",
+        "categoria": "sab-cremas",
+        "nombre": "Crema del cielo",
+        "descripcion": "La celeste.",
+        "precio": null,
+        "foto": "img/cielo-compartido.webp",
+        "orden": 7
+      },
+      {
+        "id": "s-mascarpone",
+        "categoria": "sab-cremas",
+        "nombre": "Mascarpone",
+        "precio": null,
+        "orden": 8
+      },
+      {
+        "id": "s-sambayon",
+        "categoria": "sab-cremas",
+        "nombre": "Sambayón",
+        "descripcion": "¿Quién ama este sabor?",
+        "precio": null,
+        "foto": "img/sambayon.webp",
+        "orden": 9
+      },
+      {
+        "id": "s-mousse-limon",
+        "categoria": "sab-cremas",
+        "nombre": "Mousse de limón",
+        "precio": null,
+        "orden": 10
+      },
+      {
+        "id": "s-mousse-maracuya",
+        "categoria": "sab-cremas",
+        "nombre": "Mousse de maracuyá",
+        "precio": null,
+        "orden": 11
+      },
+      {
+        "id": "s-frutilla-crema",
+        "categoria": "sab-cremas",
+        "nombre": "Frutilla a la crema",
+        "precio": null,
+        "orden": 12
+      },
+      {
+        "id": "s-banana-split",
+        "categoria": "sab-cremas",
+        "nombre": "Banana split",
+        "precio": null,
+        "foto": "img/banana-split.webp",
+        "orden": 13
+      },
+      {
+        "id": "s-menta",
+        "categoria": "sab-cremas",
+        "nombre": "Menta granizada",
+        "precio": null,
+        "orden": 14
+      },
+      {
+        "id": "s-pistacho",
+        "categoria": "sab-cremas",
+        "nombre": "Pistacho",
+        "descripcion": "Cada vez lo piden más.",
+        "precio": null,
+        "foto": "img/pistacho.webp",
+        "etiquetas": [
+          "casa"
+        ],
+        "orden": 15
+      },
+      {
+        "id": "s-frutilla",
+        "categoria": "sab-frutas",
+        "nombre": "Frutilla",
+        "precio": null,
+        "orden": 1
+      },
+      {
+        "id": "s-frambuesa",
+        "categoria": "sab-frutas",
+        "nombre": "Frambuesa",
+        "precio": null,
+        "orden": 2
+      },
+      {
+        "id": "s-limon",
+        "categoria": "sab-frutas",
+        "nombre": "Limón",
+        "descripcion": "Solo para fanáticos.",
+        "precio": null,
+        "foto": "img/limon.webp",
+        "orden": 3
+      },
+      {
+        "id": "s-kiwi",
+        "categoria": "sab-frutas",
+        "nombre": "Kiwi",
+        "precio": null,
+        "orden": 4
+      },
+      {
+        "id": "s-pomelo",
+        "categoria": "sab-frutas",
+        "nombre": "Pomelo rosado",
+        "precio": null,
+        "orden": 5
+      },
+      {
+        "id": "s-naranja",
+        "categoria": "sab-frutas",
+        "nombre": "Naranja",
+        "precio": null,
+        "orden": 6
+      },
+      {
+        "id": "s-capuccino",
+        "categoria": "sab-estacion",
+        "nombre": "Capuccino",
+        "descripcion": "Café, crema y chocolate, en capas.",
+        "precio": null,
+        "foto": "img/capuccino.webp",
+        "etiquetas": [
+          "estrella"
+        ],
+        "orden": 1
+      },
+      {
+        "id": "s-tiramisu",
+        "categoria": "sab-estacion",
+        "nombre": "Tiramisú",
+        "precio": null,
+        "orden": 2
+      },
+      {
+        "id": "s-coco",
+        "categoria": "sab-estacion",
+        "nombre": "Coco",
+        "precio": null,
+        "orden": 3
+      },
+      {
+        "id": "s-frutos-bosque",
+        "categoria": "sab-estacion",
+        "nombre": "Frutos del bosque",
+        "precio": null,
+        "foto": "img/frutos-bosque.webp",
+        "orden": 4
+      },
+      {
+        "id": "s-mandarina",
+        "categoria": "sab-estacion",
+        "nombre": "Mandarina",
+        "precio": null,
+        "orden": 5
+      }
+    ]
+  },
+  "textos": {
+    "tuPedido": "Tu pote",
+    "verPedido": "Tu pote",
+    "carritoVacio": "Tu pote está vacío.",
+    "carritoVacioSub": "Armá tu kilo o sumá algo de la carta.",
+    "enviarPedido": "Lo paso a buscar",
+    "retiro": "Retiro en sucursal",
+    "pedidoListo": "Tomá, te lo merecés",
+    "pedidoListoSub": "Tu código es {codigo}. La sucursal lo ve en su panel y te escribe por WhatsApp.",
+    "porWhatsappSub": "Pagás al retirar, en efectivo o con tarjeta",
+    "waPedido": "Hola {negocio}! Quiero retirar este pedido:"
+  }
+}
