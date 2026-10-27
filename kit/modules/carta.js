@@ -6,8 +6,14 @@
 //   template(p, ctx) → HTML interno de cada ítem (para conservar el diseño propio de la demo)
 //   etiquetas: { picante: { label: 'Picante', icono: '<svg…>' } }
 //   numerar: true  → "01, 02…" por categoría
+//   pedir: false   → vidriera sin botón Agregar (o data-kit-pedir="false" en el contenedor)
+//   filtro(p)      → true para mostrar el producto
+// data-kit-categorias="a,b" en el contenedor: solo esas secciones (ej. carta del mostrador y encargos en la misma página).
+// Opciones distintas por contenedor: initKit({ cartas: { <id del contenedor>: {…} } }).
 import { esc, $$ } from '../core/util.js';
 import { t } from '../core/i18n.js';
+import { tieneVariantes, precioDesde } from '../core/variantes.js';
+import { filtrarCarta } from '../core/temporadas.js';
 
 const ICONOS = {
   picante: '<svg viewBox="0 0 24 24"><path d="M14 6c3 0 6 2 6 6 0 6-8 10-15 10 6-3 7-7 8-11 .4-2 1-5 1-5Z" fill="currentColor"/><path d="M14 6c0-2 1-3 3-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
@@ -18,8 +24,10 @@ const ICONOS = {
 const LABELS = { es: { picante: 'Picante', veggie: 'Sin carne', casa: 'De la casa', nuevo: 'Nuevo' }, 'pt-BR': { picante: 'Apimentado', veggie: 'Vegetariano', casa: 'Da casa', nuevo: 'Novo' } };
 
 export function mountCarta(el, ctx, opts = {}) {
-  let cats = [], prods = [], actual = el.dataset.kitCategoria || null;
+  let cats = [], prods = [], temporada = null, actual = el.dataset.kitCategoria || null;
   el.classList.add('kit-root', 'kit-carta');
+  const pedir = opts.pedir !== false && el.dataset.kitPedir !== 'false';
+  const soloCats = (el.dataset.kitCategorias || '').split(',').map(x => x.trim()).filter(Boolean);
   el.setAttribute('aria-busy', 'true');
 
   function etiquetaHTML(tag) {
@@ -32,7 +40,7 @@ export function mountCarta(el, ctx, opts = {}) {
 
   function itemHTML(p, i) {
     if (opts.template) return opts.template(p, { ...ctx, index: i, etiquetaHTML });
-    const precio = ctx.money(p.precio) ?? `<span class="kit-price--na">${esc(t('sinPrecio'))}</span>`;
+    const precio = tieneVariantes(p) ? esc(t('desdePrecio', { precio: ctx.money(precioDesde(p)) })) : ctx.money(p.precio) ?? `<span class="kit-price--na">${esc(ctx.pedible(p) ? t('aConfirmar') : t('sinPrecio'))}</span>`;
     return `
       ${p.foto ? `<img class="kit-item__foto" src="${esc(ctx.asset(p.foto))}" alt="" loading="lazy">` : ''}
       <div class="kit-item__body">
@@ -41,28 +49,29 @@ export function mountCarta(el, ctx, opts = {}) {
       </div>
       <div class="kit-item__side">
         <span class="kit-price">${precio}</span>
-        ${ctx.carrito && p.disponible !== false && p.precio != null ? `<div class="kit-qty" data-kit-qty="${esc(p.id)}"></div>` : ''}
+        ${ctx.carrito && pedir && ctx.pedible(p) ? `<div class="kit-qty" data-kit-qty="${esc(p.id)}"></div>` : ''}
         ${p.disponible === false ? `<span class="kit-badge kit-badge--off">${esc(t('noDisponible'))}</span>` : ''}
       </div>`;
   }
 
   function render() {
-    const visibles = cats.filter(c => prods.some(p => p.categoria === c.id));
+    const mostrar = ctx.visibles(cats);
+    const visibles = mostrar.filter(c => prods.some(p => p.categoria === c.id));
     const sueltos = prods.filter(p => !cats.some(c => c.id === p.categoria));
-    const grupos = visibles.map(c => ({ id: c.id, nombre: c.nombre, items: prods.filter(p => p.categoria === c.id) }));
+    const grupos = visibles.map(c => ({ id: c.id, nombre: c.nombre, especial: !!c.especial, items: prods.filter(p => p.categoria === c.id) }));
     if (sueltos.length) grupos.push({ id: '_otros', nombre: t('sinCategoria'), items: sueltos });
     if (!grupos.some(g => g.id === actual)) actual = grupos[0]?.id || null;
     const uidp = 'kc' + Math.random().toString(36).slice(2, 7);
     el.innerHTML = `
       ${grupos.length > 1 ? `<div class="kit-tabs" role="tablist" aria-label="${esc(t('carta'))}">
-        ${grupos.map(g => `<button type="button" role="tab" class="kit-tab${g.id === actual ? ' is-on' : ''}" id="${uidp}-t-${esc(g.id)}" aria-controls="${uidp}-p-${esc(g.id)}" aria-selected="${g.id === actual}" data-cat="${esc(g.id)}">${esc(g.nombre)}</button>`).join('')}
+        ${grupos.map(g => `<button type="button" role="tab" class="kit-tab${g.id === actual ? ' is-on' : ''}${g.especial ? ' kit-tab--especial' : ''}" id="${uidp}-t-${esc(g.id)}" aria-controls="${uidp}-p-${esc(g.id)}" aria-selected="${g.id === actual}" data-cat="${esc(g.id)}">${esc(g.nombre)}</button>`).join('')}
       </div>` : ''}
       ${grupos.map(g => `<div class="kit-carta__panel" role="tabpanel" id="${uidp}-p-${esc(g.id)}" aria-labelledby="${uidp}-t-${esc(g.id)}" ${g.id === actual ? '' : 'hidden'}>
         ${g.items.map((p, i) => `<article class="kit-item${p.disponible === false ? ' is-off' : ''}${opts.itemClass ? ' ' + opts.itemClass : ''}" data-id="${esc(p.id)}" data-cat="${esc(g.id)}" ${p.foto ? `data-photo="${esc(ctx.asset(p.foto))}"` : ''} style="--i:${i}">${itemHTML(p, i)}</article>`).join('')}
       </div>`).join('')}`;
     el.removeAttribute('aria-busy');
     ctx.carrito?.sync(el);
-    document.dispatchEvent(new CustomEvent('kit:carta', { detail: { el, productos: prods, categorias: cats } }));
+    document.dispatchEvent(new CustomEvent('kit:carta', { detail: { el, productos: prods, categorias: cats, temporada, visibles: mostrar, especiales: mostrar.filter(c => c.especial) } }));
   }
 
   el.addEventListener('click', (e) => {
@@ -78,7 +87,14 @@ export function mountCarta(el, ctx, opts = {}) {
   });
 
   async function cargar() {
-    try { [cats, prods] = await Promise.all([ctx.store.getCategorias(), ctx.store.getProductos()]); render(); }
+    try {
+      const [c, p, tmp] = await Promise.all([ctx.store.getCategorias(), ctx.store.getProductos(), ctx.store.getTemporada ? ctx.store.getTemporada() : null]);
+      temporada = tmp; ctx.temporada = tmp;
+      ({ cats, prods } = filtrarCarta(c, p, tmp));
+      if (soloCats.length) { cats = cats.filter(x => soloCats.includes(x.id)); prods = prods.filter(x => soloCats.includes(x.categoria)); }
+      if (typeof opts.filtro === 'function') prods = prods.filter(opts.filtro);
+      render();
+    }
     catch (err) { console.error('[kit] carta', err); el.innerHTML = `<p class="kit-error">${esc(t('error'))}</p>`; }
   }
   ctx.store.onChange(cargar);

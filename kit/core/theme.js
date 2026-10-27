@@ -37,7 +37,8 @@ export function applyTheme(marca = {}, root = document.documentElement) {
     '--kit-font-head': f.titulos || 'inherit',
     '--kit-font-body': f.texto || 'inherit',
     '--kit-head-case': e.mayusculas === false ? 'none' : 'uppercase',
-    '--kit-radius': RADIOS[e.forma] || e.radio || '14px',
+    // "pildora" es para botones: las cajas (popups, tarjetas) no pueden ser de 999px o quedan circulares
+    '--kit-radius': e.forma === 'pildora' ? (e.radio || '22px') : (RADIOS[e.forma] || e.radio || '14px'),
     '--kit-radius-btn': e.forma === 'pildora' ? '999px' : (RADIOS[e.forma] || e.radio || '12px'),
     '--kit-border-w': e.borde || '1.5px',
     '--kit-shadow': SOMBRAS[e.sombra] || e.sombra || SOMBRAS.suave,

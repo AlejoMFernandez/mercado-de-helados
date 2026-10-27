@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- Carta pública: la página a la que lleva el QR de las mesas. Va en web/carta/index.html de cada demo (scripts/instalar.mjs la copia).
+     Se edita desde /admin (Carta) y el QR + las tarjetas para imprimir salen de /admin (QR de la carta). -->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Carta</title>
+<meta name="description" content="Carta online, siempre actualizada.">
+<script>
+  // /carta sin barra final rompe las rutas relativas en algunos servidores (XAMPP): la agregamos.
+  if (!/\/$|\.html$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../kit/kit.css?v=18">
+<link rel="stylesheet" href="../kit/menu.css?v=18">
+</head>
+<body>
+<div id="kit-menu" class="kit-root kit-menu" aria-busy="true"></div>
+<script type="module">
+  import { initMenu } from '../kit/modules/menu.js?v=18';
+  initMenu({ config: '../cliente.json', sitio: '../', imagenes: { lqip: '../img/lqip.json' } });
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 // Mercado de Helados · demo (celular primero)
-import { initKit } from '../kit/kit.js?v=1';
+import { initKit } from '../kit/kit.js?v=18';
 import { popup } from '../kit/core/ui.js';
 
 const $ = (s, c = document) => c.querySelector(s);
@@ -365,7 +365,7 @@ function pintarSucursales() {
 }
 $('#suc-lista').addEventListener('click', (e) => {
   const b = e.target.closest('[data-pedir]'); if (!b || !K?.carrito) return;
-  K.carrito.elegirSucursal(b.dataset.pedir);
+  K.carrito.setSucursal(b.dataset.pedir);
   pintarSucursales();
   toast(`Retirás en ${K.carrito.sucursal.nombre}. Ahora armá tu pedido.`);
   setTimeout(() => $('#kilo').scrollIntoView({ behavior: reducido ? 'auto' : 'smooth' }), 700);

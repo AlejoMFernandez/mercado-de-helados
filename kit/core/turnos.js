@@ -45,21 +45,82 @@ export function estadoAbierto(horarios, tz) {
 const DEF = { intervaloMin: 30, duracionMin: 90, capacidad: 30, maxPersonas: 10, anticipacionMin: 60, diasAdelante: 21, ultimoTurnoMin: 60, cerrados: [] };
 export const configReservas = (cfg) => ({ ...DEF, ...(cfg || {}) });
 
+// ---------- servicios y tandas (opcional) ----------
+// Para locales que dan turnos fijos por servicio (almuerzo / cena) en vez de "cada 30 min dentro del horario":
+// "reservas": { "capacidad": 150, "servicios": [
+//   { "id": "cena", "nombre": "Cena", "dias": ["mar","mie","jue","vie","sab","dom"],
+//     "tandas": [ { "nombre": "Primer tiempo", "turnos": ["20:00","20:15","20:30"] },
+//                 { "nombre": "Segundo tiempo", "turnos": ["22:15","22:30","22:45"], "capacidad": 120 } ] } ] }
+// Todos los turnos de una tanda comparten el cupo (es la misma "vuelta" de mesas).
+// Cupo: tanda.capacidad ?? servicio.capacidad ?? reservas.capacidad.
+export const serviciosDe = (cfg) => (Array.isArray(cfg?.servicios) && cfg.servicios.length ? cfg.servicios : null);
+
+export function tandaDe(cfg, hora) {
+  const R = configReservas(cfg);
+  for (const s of serviciosDe(R) || []) {
+    for (const [i, t] of (s.tandas || []).entries()) {
+      if ((t.turnos || []).includes(hora)) return { servicio: s, tanda: t, indice: i, capacidad: Number(t.capacidad ?? s.capacidad ?? R.capacidad) };
+    }
+  }
+  return null;
+}
+
+// Personas que ya ocupan el lugar que pide "hora" (por tanda o por superposición de duración).
+// ocupacion: { "21:00": 8 } (personas por hora)
+export function usadosEn(cfg, hora, ocupacion = {}) {
+  const R = configReservas(cfg);
+  const td = serviciosDe(R) ? tandaDe(R, hora) : null;
+  if (td) return (td.tanda.turnos || []).reduce((s, h) => s + (Number(ocupacion[h]) || 0), 0);
+  const m = aMin(hora);
+  return Object.entries(ocupacion).reduce((s, [h, p]) => s + (Math.abs(aMin(h) - m) < R.duracionMin ? Number(p) || 0 : 0), 0);
+}
+export function capacidadEn(cfg, hora) {
+  const R = configReservas(cfg);
+  const td = serviciosDe(R) ? tandaDe(R, hora) : null;
+  return td ? td.capacidad : R.capacidad;
+}
+
+// Servicios que se dan ese día (por "dias" del servicio o, si no tiene, porque el local abre ese día).
+export function serviciosDelDia({ horarios, reservas }, fecha) {
+  const R = configReservas(reservas);
+  if ((R.cerrados || []).includes(fecha)) return [];
+  const dow = DIAS[diaSemana(fecha)];
+  return (serviciosDe(R) || []).filter(s => Array.isArray(s.dias) ? s.dias.includes(dow) : franjas(horarios, fecha).length > 0);
+}
+
 // Turnos de un día con lugares libres.
 // ocupacion: { "21:00": 8, "24:30": 4 }  (personas por hora, sin canceladas)
-export function generarTurnos({ horarios, reservas, tz }, fecha, ocupacion = {}, personas = 1) {
+// servicio: id del servicio a mostrar (solo con "servicios"); sin él devuelve los de todos.
+export function generarTurnos({ horarios, reservas, tz }, fecha, ocupacion = {}, personas = 1, servicio = null) {
   const r = configReservas(reservas);
   if ((r.cerrados || []).includes(fecha)) return [];
   const now = ahoraEn(tz);
   const minAhora = (now.dia - diaNum(fecha)) * 1440 + now.min; // minuto "ahora" medido desde el inicio de ese día
-  const ocup = Object.entries(ocupacion).map(([h, p]) => [aMin(h), Number(p) || 0]);
   const out = [];
+  if (serviciosDe(r)) {
+    for (const s of serviciosDelDia({ horarios, reservas }, fecha)) {
+      if (servicio && s.id !== servicio) continue;
+      (s.tandas || []).forEach((td, ti) => {
+        const cap = Number(td.capacidad ?? s.capacidad ?? r.capacidad);
+        const usados = (td.turnos || []).reduce((acc, h) => acc + (Number(ocupacion[h]) || 0), 0);
+        const libres = Math.max(0, cap - usados);
+        for (const h of td.turnos || []) {
+          const m = aMin(h);
+          const enHora = m - minAhora >= r.anticipacionMin;
+          out.push({ min: m, hora: aHora(m), label: horaVisible(m), libres, capacidad: cap, disponible: enHora && libres >= personas, pasado: !enHora,
+            servicio: s.id, servicioNombre: s.nombre || s.id, tanda: td.nombre || '', tandaIndice: ti });
+        }
+      });
+    }
+    return out.sort((a, b) => a.min - b.min);
+  }
+  const ocup = Object.entries(ocupacion).map(([h, p]) => [aMin(h), Number(p) || 0]);
   for (const [ini, fin] of franjas(horarios, fecha)) {
     for (let m = ini; m <= fin - r.ultimoTurnoMin; m += r.intervaloMin) {
       const usados = ocup.reduce((s, [hm, p]) => s + (Math.abs(hm - m) < r.duracionMin ? p : 0), 0);
       const libres = Math.max(0, r.capacidad - usados);
       const enHora = m - minAhora >= r.anticipacionMin;
-      out.push({ min: m, hora: aHora(m), label: horaVisible(m), libres, disponible: enHora && libres >= personas, pasado: !enHora });
+      out.push({ min: m, hora: aHora(m), label: horaVisible(m), libres, capacidad: r.capacidad, disponible: enHora && libres >= personas, pasado: !enHora });
     }
   }
   return out;
@@ -72,7 +133,9 @@ export function diasReservables({ horarios, reservas, tz }) {
   const out = [];
   for (let i = 0; i < r.diasAdelante; i++) {
     const fecha = fechaDeNum(now.dia + i);
-    const abierto = franjas(horarios, fecha).length > 0 && !(r.cerrados || []).includes(fecha);
+    const abierto = serviciosDe(r)
+      ? serviciosDelDia({ horarios, reservas }, fecha).length > 0
+      : franjas(horarios, fecha).length > 0 && !(r.cerrados || []).includes(fecha);
     out.push({ fecha, offset: i, abierto, dow: diaSemana(fecha) });
   }
   return out;
